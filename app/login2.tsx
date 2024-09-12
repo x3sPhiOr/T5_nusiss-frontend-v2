@@ -9,7 +9,6 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { useAuth } from '@/context/AuthContext';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import { globals } from '@/styles/_global';
-import { StyleSheet } from 'react-native';
 
 export default function Login() {
   const { authenticate, isLoadingAuth } = useAuth();
@@ -32,13 +31,13 @@ export default function Login() {
         <VStack flex={ 1 } justifyContent='center' alignItems='center' p={ 40 } gap={ 40 }>
 
           <HStack gap={ 10 }>
-            <Text fontSize={ 30 } bold mb={ 20 }>Buffet Restaraunt Booking App</Text>
-            <TabBarIcon name="restaurant" size={ 35 } />
+            <Text fontSize={ 30 } bold mb={ 20 }>Ticket Booking</Text>
+            <TabBarIcon name="ticket" size={ 50 } />
           </HStack >
 
           <VStack w={ "100%" } gap={ 30 }>
 
-            {/* <VStack gap={ 5 }>
+            <VStack gap={ 5 }>
               <Text ml={ 10 } fontSize={ 14 } color="gray">Email</Text>
               <Input
                 value={ email }
@@ -65,46 +64,19 @@ export default function Login() {
                 h={ 48 }
                 p={ 14 }
               />
-            </VStack> */}
-            <Button>
-              <TabBarIcon name="logo-google" size={ 19 } style={styles.icon} />
-              Sign in with Google
-            </Button>
-            {/* <Button isLoading={ isLoadingAuth } onPress={ onAuthenticate }>{ authMode }</Button> */}
+            </VStack>
+
+            <Button isLoading={ isLoadingAuth } onPress={ onAuthenticate }>{ authMode }</Button>
 
           </VStack>
 
-          {/* <Divider w={ "90%" } />
+          <Divider w={ "90%" } />
 
           <Text onPress={ onToggleAuthMode } fontSize={ 16 } underline>
             { authMode === 'login' ? 'Register new account' : 'Login to account' }
-          </Text> */}
+          </Text>
         </VStack>
       </ScrollView>
     </KeyboardAvoidingView >
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#4285F4', // Google blue color
-    padding: 10,
-    borderRadius: 5,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginRight: 10, // Add space between the icon and text
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
