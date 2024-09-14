@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform } from 'react-native'
+import { View, TextInput, Platform } from 'react-native'
 import { Button } from './Button';
 import RNDateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Text } from './Text';
@@ -10,7 +10,7 @@ interface DateTimePickerProps {
   currentDate: Date;
 }
 
-export default function DateTimePicker(props: DateTimePickerProps) {
+export default function DateTimePickers(props: DateTimePickerProps) {
   if (Platform.OS === 'android') {
     return <AndroidDateTimePicker {...props} />;
   }
@@ -18,6 +18,10 @@ export default function DateTimePicker(props: DateTimePickerProps) {
   if (Platform.OS === 'ios') {
     return <IOSDateTimePicker {...props} />;
   }
+
+  // if (Platform.OS === 'web') {
+  //   return <WebDateTimePicker {...props} />;
+  // }
 
   return null;
 }
@@ -52,3 +56,24 @@ export const IOSDateTimePicker = ({ onChange, currentDate }: DateTimePickerProps
     />
   )
 }
+
+
+// Web date picker component
+export const WebDateTimePicker = ({ onChange, currentDate }: DateTimePickerProps) => {
+  const handleDateChange = () => {
+    const selectedDate = new Date();
+    onChange(selectedDate);
+  };
+
+  return (
+    <View>
+      <Text>{currentDate.toLocaleDateString()}</Text>
+      <TextInput
+        style={{ padding: 10, borderColor: 'gray', borderWidth: 1 }}
+        // type="date"
+        value={currentDate.toISOString().split('T')[0]} // Format the date for the web input
+        onChange={handleDateChange}
+      />
+    </View>
+  );
+};

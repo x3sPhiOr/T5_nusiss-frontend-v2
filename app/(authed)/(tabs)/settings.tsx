@@ -3,6 +3,8 @@ import { VStack } from '@/components/VStack';
 import { Button } from '@/components/Button';
 
 export default function SettingsScreen() {
+  // return <></>;
+
   const { logout } = useAuth();
 
   return (

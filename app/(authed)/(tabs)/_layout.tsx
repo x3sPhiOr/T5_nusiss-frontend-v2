@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { UserRole } from '@/types/user';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { Center } from 'native-base';
 import { ComponentProps } from 'react';
 import { Text } from 'react-native';
 
@@ -11,34 +12,34 @@ export default function TabLayout() {
 
   const tabs = [
     {
-      showFor: [UserRole.Attendee, UserRole.Manager],
+      // showFor: [UserRole.Attendee, UserRole.Manager],
       name: '(events)',
-      displayName: 'Events',
+      displayName: 'Book Now',
+      icon: 'add-circle-sharp',
+      options: {
+        headerShown: false
+      }
+    },
+    {
+      // showFor: [UserRole.Attendee],
+      name: '(tickets)',
+      displayName: 'My Reservations',
       icon: 'calendar',
       options: {
         headerShown: false
       }
     },
     {
-      showFor: [UserRole.Attendee],
-      name: '(tickets)',
-      displayName: 'My Tickets',
-      icon: 'ticket',
-      options: {
-        headerShown: false
-      }
-    },
-    {
-      showFor: [UserRole.Manager],
-      name: 'scan-ticket',
-      displayName: 'Scan Ticket',
-      icon: 'scan',
+      // showFor: [UserRole.Manager],
+      name: 'scan-ticket', //routes
+      displayName: 'Manage Users',
+      icon: 'person-circle-sharp',
       options: {
         headerShown: true
       }
     },
     {
-      showFor: [UserRole.Attendee, UserRole.Manager],
+      // showFor: [UserRole.Attendee, UserRole.Manager],
       name: 'settings',
       displayName: 'Settings',
       icon: 'cog',
@@ -57,9 +58,9 @@ export default function TabLayout() {
           options={ {
             ...tab.options,
             headerTitle: tab.displayName,
-            href: tab.showFor.includes(user?.role!) ? tab.name : null,
+            // href: tab.showFor.includes(user?.role!) ? tab.name : null,
             tabBarLabel: ({ focused }) => (
-              <Text style={ { color: focused ? "black" : "gray", fontSize: 12 } } >
+              <Text style={ { color: focused ? "black" : "gray", fontSize: 12, padding: 20, alignContent: "center" } } >
                 { tab.displayName }
               </Text>
             ),

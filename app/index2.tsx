@@ -7,6 +7,7 @@ import { eventService } from '@/services/events';
 import { useNavigation, router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
+import { Select } from 'native-base';
 
 export default function NewEvent() {
   const navigation = useNavigation();
@@ -15,6 +16,8 @@ export default function NewEvent() {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [date, setDate] = useState(new Date());
+
+  
 
   async function onSubmit() {
     try {
@@ -53,15 +56,20 @@ export default function NewEvent() {
       </VStack>
 
       <VStack gap={ 5 }>
-        <Text ml={ 10 } fontSize={ 14 } color="gray">Location</Text>
-        <Input
+        <Text ml={ 10 } fontSize={ 14 } color="gray">Timing</Text>
+        {/* <Input
           value={ location }
           onChangeText={ setLocation }
           placeholder="Name"
           placeholderTextColor="darkgray"
           h={ 48 }
           p={ 14 }
-        />
+        /> */}
+        <Select>
+          <Select.Item label="Breakfast" value="Breakfast" />
+          <Select.Item label="Lunch" value="Lunch" />
+          <Select.Item label="Dinner" value="Dinner" />
+        </Select>
       </VStack>
 
       <VStack gap={ 5 }>

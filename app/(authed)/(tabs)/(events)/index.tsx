@@ -1,127 +1,134 @@
 import { Button } from '@/components/Button';
-import { Divider } from '@/components/Divider';
-import { HStack } from '@/components/HStack';
+import DateTimePicker from '@/components/DateTimePicker';
+import { Input } from '@/components/Input';
 import { Text } from '@/components/Text';
 import { VStack } from '@/components/VStack';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { useAuth } from '@/context/AuthContext';
 import { eventService } from '@/services/events';
-import { ticketService } from '@/services/tickets';
-import { Event } from '@/types/event';
-import { UserRole } from '@/types/user';
-import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation, router } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Platform } from 'react-native';
+import { Select } from 'native-base';
+import DatePicker from 'react-datepicker';
 
-export default function EventsScreen() {
-  const { user } = useAuth();
+export default function NewEvent() {
   const navigation = useNavigation();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState('');
+  const [date, setDate] = useState(new Date());
 
-  function onGoToEventPage(id: number) {
-    if (user?.role === UserRole.Manager) {
-      router.push(`/(events)/event/${id}`);
-    }
-  }
+  const handleWebDateChange = (date: Date | null) => {
+    if (date) {
+      var today = new Date();
+      var yesterday = today.getDate() - 1;
+      // yesterday.setDate(yesterday.getDate() - 1);
+      today.setHours(0, 0, 0, 0);
 
-  async function buyTicket(id: number) {
-    try {
-      await ticketService.createOne(id);
-      Alert.alert("Success", "Ticket purchased successfully");
-      fetchEvents();
-    } catch (error) {
-      Alert.alert("Error", "Failed to buy ticket");
-    }
-  }
-
-  const fetchEvents = async () => {
-    try {
-      setIsLoading(true);
-      const response = await eventService.getAll();
-      setEvents(response.data);
-    } catch (error) {
-      Alert.alert("Error", "Failed to fetch events");
-    } finally {
-      setIsLoading(false);
+      if (date > today) {
+        setDate(date); // Set the selected date if it's greater than today's date
+      } else {
+        alert("The selected date must not be before today.");
+      }
     }
   };
 
-  useFocusEffect(useCallback(() => { fetchEvents(); }, []));
+
+
+  async function onSubmit() {
+    try {
+      setIsSubmitting(true);
+
+      await eventService.createOne(name, location, date.toISOString());
+      router.back();
+    } catch (error) {
+      Alert.alert("Error", "Failed to create event");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function onChangeDate(date?: Date) {
+    setDate(date || new Date());
+  }
 
   useEffect(() => {
-    navigation.setOptions({
-      headerTitle: "Events",
-      headerRight: user?.role === UserRole.Manager ? headerRight : null,
-    });
-  }, [navigation, user]);
+    navigation.setOptions({ headerTitle: "New Buffet Reservation" });
+  }, []);
 
   return (
-    <VStack flex={1} p={20} pb={0} gap={20}>
+    <VStack m={20} flex={1} gap={30}>
 
-      <HStack alignItems='center' justifyContent='space-between'>
-        <Text fontSize={18} bold>{events.length} Events</Text>
-      </HStack>
+      {/* <VStack gap={ 5 }>
+        <Text ml={ 10 } fontSize={ 14 } color="gray">Name</Text>
+        <Input
+          value={ name }
+          onChangeText={ setName }
+          placeholder="Name"
+          placeholderTextColor="darkgray"
+          h={ 48 }
+          p={ 14 }
+        />
+      </VStack> */}
 
-      <FlatList
-        keyExtractor={(item) => item.id.toString()}
-        data={events}
-        onRefresh={fetchEvents}
-        refreshing={isLoading}
-        ItemSeparatorComponent={() => <VStack h={20} />}
-        renderItem={({ item: event }) => (
-          <VStack
-            gap={20}
-            p={20}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 20,
-            }} key={event.id}>
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Number of Seats</Text>
+        <Select placeholder='Select one' height={45} fontSize={"md"} backgroundColor={"#f9f9f9"} borderColor={"#000"}>
+          <Select.Item label="1" value="1" />
+          <Select.Item label="2" value="2" />
+          <Select.Item label="3" value="3" />
+          <Select.Item label="4" value="4" />
+          <Select.Item label="5" value="5" />
+        </Select>
+      </VStack>
 
-            <TouchableOpacity onPress={() => onGoToEventPage(event.id)}>
-              <HStack alignItems='center' justifyContent="space-between">
-                <HStack alignItems='center'>
-                  <Text fontSize={26} bold >{event.name}</Text>
-                  <Text fontSize={26} bold > | </Text>
-                  <Text fontSize={16} bold >{event.location}</Text>
-                </HStack>
-                {user?.role === UserRole.Manager && <TabBarIcon size={24} name="chevron-forward" />}
-              </HStack>
-            </TouchableOpacity>
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Timing</Text>
+        <Select placeholder='Select one' height={45} fontSize={"md"} backgroundColor={"#f9f9f9"} borderColor={"#000"}>
+          <Select.Item label="Breakfast" value="Breakfast" />
+          <Select.Item label="Lunch" value="Lunch" />
+          <Select.Item label="Dinner" value="Dinner" />
+        </Select>
+      </VStack>
 
-            <Divider />
+      <VStack gap={5}>
+        <Text ml={10} fontSize={14} color="gray">Date</Text>
+        {Platform.OS === 'web' ? (
+          <DatePicker
+            // showIcon
+            selected={date}
+            onChange={handleWebDateChange}
+            dateFormat="dd/MM/yyyy"
+            className="react-datepicker-wrapper"
+            customInput={<input style={customInputStyles} />}
+          // style={styles.input}
+          />) : (
+          <DateTimePicker onChange={onChangeDate} currentDate={date} />)}
+      </VStack>
 
-            <HStack justifyContent='space-between'>
-              <Text bold fontSize={16} color='gray'>Sold: {event.totalTicketsPurchased}</Text>
-              <Text bold fontSize={16} color='green'>Entered: {event.totalTicketsEntered}</Text>
-            </HStack>
 
-            {user?.role === UserRole.Attendee && (
-              <VStack>
-                <Button
-                  variant='outlined'
-                  disabled={isLoading}
-                  onPress={() => buyTicket(event.id)}
-                >
-                  Buy Ticket
-                </Button>
-              </VStack>
-            )}
-
-            <Text fontSize={13} color='gray'>{event.date}</Text>
-          </VStack>
-
-        )}
-      />
+      <Button
+        mt={"auto"}
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
+        onPress={onSubmit}
+      >
+        Book Reservation
+      </Button>
 
     </VStack>
   );
-}
+};
 
-const headerRight = () => {
-  return (
-    <TabBarIcon size={32} name="add-circle-outline" onPress={() => router.push('/(events)/new')} />
-  );
+const customInputStyles = {
+  backgroundColor: '#f9f9f9',
+  border: '1px solid #000',
+  padding: '10px',
+  borderRadius: '5px',
+  fontSize: '16px',
+  height: 50,
+  width: '100%',
+  boxSizing: 'border-box' as const, // Ensure padding doesn't affect width
+  outline: 'none', // Remove default input field outline
+  marginBottom: 10,
 };

@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import { globals } from '@/styles/_global';
 import { StyleSheet } from 'react-native';
+import { Redirect } from 'expo-router';
 
 export default function Login() {
   const { authenticate, isLoadingAuth } = useAuth();
@@ -18,25 +19,33 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handlePress = () => {
+    setIsLoggedIn(true);
+    if (isLoggedIn) {
+      return <Redirect href="/" />;
+    }
+  };
+
   async function onAuthenticate() {
     await authenticate(authMode, email, password);
   }
 
-  function onToggleAuthMode() {
-    setAuthMode(authMode === 'login' ? 'register' : 'login');
-  }
+  // function onToggleAuthMode() {
+  //   setAuthMode(authMode === 'login' ? 'register' : 'login');
+  // }
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={ globals.container }>
-      <ScrollView contentContainerStyle={ globals.container }>
-        <VStack flex={ 1 } justifyContent='center' alignItems='center' p={ 40 } gap={ 40 }>
+    <KeyboardAvoidingView behavior="padding" style={globals.container}>
+      <ScrollView contentContainerStyle={globals.container}>
+        <VStack flex={1} justifyContent='center' alignItems='center' p={40} gap={40}>
 
-          <HStack gap={ 10 }>
-            <Text fontSize={ 30 } bold mb={ 20 }>Buffet Restaraunt Booking App</Text>
-            <TabBarIcon name="restaurant" size={ 35 } />
+          <HStack gap={10}>
+            <Text fontSize={30} bold mb={20}>Buffet Restaraunt Booking App</Text>
+            <TabBarIcon name="restaurant" size={35} />
           </HStack >
 
-          <VStack w={ "100%" } gap={ 30 }>
+          <VStack w={"100%"} gap={30}>
 
             {/* <VStack gap={ 5 }>
               <Text ml={ 10 } fontSize={ 14 } color="gray">Email</Text>
@@ -66,8 +75,8 @@ export default function Login() {
                 p={ 14 }
               />
             </VStack> */}
-            <Button>
-              <TabBarIcon name="logo-google" size={ 19 } style={styles.icon} />
+            <Button onPress={handlePress}>
+              <TabBarIcon name="logo-google" size={19} style={styles.icon} />
               Sign in with Google
             </Button>
             {/* <Button isLoading={ isLoadingAuth } onPress={ onAuthenticate }>{ authMode }</Button> */}
