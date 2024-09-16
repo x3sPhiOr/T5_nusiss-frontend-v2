@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import { Select } from 'native-base';
 import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function NewEvent() {
   const navigation = useNavigation();
@@ -98,7 +99,7 @@ export default function NewEvent() {
             // showIcon
             selected={date}
             onChange={handleWebDateChange}
-            dateFormat="dd/MM/yyyy"
+            // dateFormat="dd/MM/yyyy"
             className="react-datepicker-wrapper"
             customInput={<input style={customInputStyles} />}
           // style={styles.input}
