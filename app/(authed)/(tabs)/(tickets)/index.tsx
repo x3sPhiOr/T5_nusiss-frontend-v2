@@ -46,8 +46,12 @@ export default function TicketScreen() {
     navigation.setOptions({ headerTitle: "My Reservations" });
   }, []);
 
+  // test using ngrok (run command prompt in admin)
+  // ngrok http http://localhost:5023
+  // ngrok http https://localhost:7248
 
   useEffect(() => {
+    // fetch('https://2bea-119-74-201-136.ngrok-free.app/Reservations')
     fetch('https://192.168.56.1:7248/Reservations')
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
@@ -117,10 +121,7 @@ export default function TicketScreen() {
         </Select>
       </HStack>
 
-      <View style={styles.container}>
-
-
-
+      {/* <View style={styles.container}> */}
         <FlatList
           data={filteredReservations}
           keyExtractor={(item) => item.id.toString()} // Assuming 'id' is a unique identifier for each reservation
@@ -132,8 +133,11 @@ export default function TicketScreen() {
             </View>
           )}
         />
-      </View>
-      );
+      {/* </View>; */}
+
+    </VStack>
+  );
+}
 
       {/* <FlatList
         keyExtractor={({ id }) => id.toString()}
@@ -211,9 +215,7 @@ export default function TicketScreen() {
         ItemSeparatorComponent={() => <VStack h={20} />}
       /> */}
 
-    </VStack>
-  );
-}
+
 
 const styles = StyleSheet.create({
   container: {
