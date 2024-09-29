@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, TouchableOpacity, StyleSheet, View } from "react-native";
 import { Select, CheckIcon } from 'native-base';
 import { Reservation } from "@/types/reservation";
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+
 
 export default function TicketScreen() {
   const navigation = useNavigation();
@@ -50,12 +52,11 @@ export default function TicketScreen() {
   // ngrok http http://localhost:5023
   // ngrok http https://localhost:7248
 
-  useEffect(() => {
-    // fetch('https://2bea-119-74-201-136.ngrok-free.app/Reservations')
-    fetch('https://192.168.56.1:7248/Reservations')
+   // Function to fetch reservations
+   const fetchReservations = () => {
+    fetch('https://486c-119-74-201-136.ngrok-free.app/Reservations')
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
-        // Transform the API response to extract only the necessary fields
         console.log(data); 
         const transformedData = data.map((res: any) => ({
           reservationDate: res.ReservationDate,
@@ -68,6 +69,11 @@ export default function TicketScreen() {
       .catch(error => {
         console.error('Error fetching reservations:', error);
       });
+  };
+
+  // Use useEffect to call fetchReservations on component mount (initial render)
+  useEffect(() => {
+    fetchReservations();
   }, []);
 
 
@@ -79,7 +85,9 @@ export default function TicketScreen() {
 
   const isComplete = (reservationDate: string) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const reservationDateObj = new Date(reservationDate);
+    reservationDateObj.setHours(0, 0, 0, 0);
     return reservationDateObj <= today;
   };
 
@@ -97,37 +105,54 @@ export default function TicketScreen() {
     }
   });
 
+  // Sort reservations by date in ascending order
+  const sortedReservations = filteredReservations.sort((a, b) => {
+    return new Date(a.reservationDate).getTime() - new Date(b.reservationDate).getTime();
+  });
+
+  // Function to format the date to YYYY-MM-DD
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Returns date part in YYYY-MM-DD format
+  };
+
   return (
     <VStack flex={1} p={20} pb={0} gap={20}>
 
       <HStack alignItems="center" justifyContent="space-between">
         <Text fontSize={18} bold>{filteredReservations.length} Reservations</Text>
-
-        <Select
-          selectedValue={filter}
-          minWidth="200"
-          accessibilityLabel="Select Filter"
-          placeholder="Select Filter"
-          _selectedItem={{
-            bg: "teal.600",
-            endIcon: <CheckIcon size={5} />,
-          }}
-          onValueChange={(itemValue) => setFilter(itemValue)}
-          mt={1}
-        >
-          <Select.Item label="Show All" value="showAll" />
-          <Select.Item label="Upcoming" value="upcoming" />
-          <Select.Item label="Completed" value="completed" />
-        </Select>
+        <HStack alignItems="center" justifyContent="space-between">
+          <Text fontSize={18} bold>   </Text>
+          <TouchableOpacity onPress={fetchReservations} activeOpacity={0.4}>
+            <TabBarIcon name="refresh-circle-outline" size={30} />
+          </TouchableOpacity>
+          <Text fontSize={18} bold>   </Text>
+          <Select
+            selectedValue={filter}
+            minWidth="200"
+            accessibilityLabel="Select Filter"
+            placeholder="Select Filter"
+            _selectedItem={{
+              bg: "teal.600",
+              endIcon: <CheckIcon size={5} />,
+            }}
+            onValueChange={(itemValue) => setFilter(itemValue)}
+            mt={1}
+          >
+            <Select.Item label="Show All" value="showAll" />
+            <Select.Item label="Upcoming" value="upcoming" />
+            <Select.Item label="Completed" value="completed" />
+          </Select>
+        </HStack>
       </HStack>
 
       {/* <View style={styles.container}> */}
         <FlatList
-          data={filteredReservations}
+          data={sortedReservations}
           keyExtractor={(item) => item.id.toString()} // Assuming 'id' is a unique identifier for each reservation
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <Text style={styles.text}>Date: {item.reservationDate}</Text>
+              <Text style={styles.text}>Date: {formatDate(item.reservationDate)}</Text>
               <Text style={styles.text}>Timing: {item.timing}</Text>
               <Text style={styles.text}>Number of Seats: {item.numberOfSeats}</Text>
             </View>
