@@ -54,7 +54,7 @@ export default function TicketScreen() {
 
    // Function to fetch reservations
    const fetchReservations = () => {
-    fetch('https://486c-119-74-201-136.ngrok-free.app/Reservations')
+    fetch('https://b23e-119-74-201-136.ngrok-free.app/Reservations')
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
         console.log(data); 
@@ -80,6 +80,9 @@ export default function TicketScreen() {
   const isUpcoming = (reservationDate: string) => {
     const today = new Date();
     const reservationDateObj = new Date(reservationDate);
+    // console.log("hello");
+    // const test = reservationDateObj > today;
+    // console.log(test);
     return reservationDateObj > today;
   };
 
