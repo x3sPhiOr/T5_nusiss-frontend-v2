@@ -91,6 +91,9 @@ export default function TicketScreen() {
     today.setHours(0, 0, 0, 0);
     const reservationDateObj = new Date(reservationDate);
     reservationDateObj.setHours(0, 0, 0, 0);
+    // console.log("hello2");
+    // const test = reservationDateObj <= today;
+    // console.log(test);
     return reservationDateObj <= today;
   };
 
@@ -144,7 +147,7 @@ export default function TicketScreen() {
           >
             <Select.Item label="Show All" value="showAll" />
             <Select.Item label="Upcoming" value="upcoming" />
-            <Select.Item label="Completed" value="completed" />
+            <Select.Item label="Completed" value="complete" />
           </Select>
         </HStack>
       </HStack>
