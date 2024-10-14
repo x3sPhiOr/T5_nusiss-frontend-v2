@@ -3,11 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import { User } from '@/types/user';
+import { Redirect } from 'expo-router';
 
 interface AuthContextProps {
   isLoggedIn: boolean;
   isLoadingAuth: boolean;
-  authenticate: (authMode: "login" | "register", email: string, password: string) => Promise<void>;
+  authenticate : VoidFunction;
   logout: VoidFunction;
   user: User | null;
 }
@@ -34,36 +35,54 @@ export function AuthenticationProvider({ children }: React.PropsWithChildren) {
         router.replace('(authed)');
       } else {
         setIsLoggedIn(false);
+        // ---Check Login Boolean Value---
+        console.log(isLoggedIn+" 2")
       }
     }
 
     checkIfLoggedIn();
+    // ---Check Login Boolean Value---
+    console.log(isLoggedIn+' 3');
   }, []);
 
-  async function authenticate(authMode: "login" | "register", email: string, password: string) {
-    try {
-      setIsLoadingAuth(true);
 
-      const response = await userService[authMode](email, password);
+  function authenticate() {
+    // try {
+    //   setIsLoadingAuth(true);
 
-      if (response) {
-        setIsLoggedIn(true);
-        await AsyncStorage.setItem('token', response.data.token);
-        await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
-        setUser(response.data.user);
-        router.replace('(authed)');
-      }
-    } catch (error) {
-      setIsLoggedIn(false);
-    } finally {
-      setIsLoadingAuth(false);
-    }
+    //   const response = await userService[authMode](email, password);
+
+    //   if (response) {
+    //     setIsLoggedIn(true);
+    //     await AsyncStorage.setItem('token', response.data.token);
+    //     await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+    //     setUser(response.data.user);
+    //     router.replace('(authed)');
+    //   }
+    // } catch (error) {
+    //   setIsLoggedIn(false);
+    // } finally {
+    //   setIsLoadingAuth(false);
+    // }
+    // console.log(isLoadingAuth+' 01');
+    setIsLoadingAuth(true);
+    // console.log(isLoadingAuth+' 02');
+    setIsLoggedIn(true);
+    router.replace('(authed)');
+    setIsLoadingAuth(false);
+    // ---Check Login Boolean Value---
+    // console.log(isLoggedIn+' 1');
+    // should be false since state updates in React are asynchronous, 
+    // which means the new state value (true in this case) is not immediately available in the same function call where you trigger the state update.
+
   }
 
-  async function logout() {
+  function logout() {
     setIsLoggedIn(false);
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('user');
+    // ---Check Login Boolean Value---
+    // console.log(isLoggedIn+' 4');
+    AsyncStorage.removeItem('token');
+    AsyncStorage.removeItem('user');
   }
 
   return (

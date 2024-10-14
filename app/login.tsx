@@ -11,29 +11,30 @@ import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import { globals } from '@/styles/_global';
 import { StyleSheet } from 'react-native';
 import { Redirect } from 'expo-router';
+import React, { useEffect } from 'react';
 
 export default function Login() {
-  const { authenticate, isLoadingAuth } = useAuth();
-
-  const [authMode, setAuthMode] = useState<"login" | "register">('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const handlePress = () => {
-    setIsLoggedIn(true);
-    if (isLoggedIn) {
-      return <Redirect href="/" />;
-    }
-  };
-
-  async function onAuthenticate() {
-    await authenticate(authMode, email, password);
+  const { isLoggedIn, authenticate, isLoadingAuth } = useAuth();
+  function onAuthenticate() {
+    console.log("test");
+    // isLoggedIn === false;
+    authenticate();
+    console.log(isLoggedIn+' 1');
   }
+
+  // const [authMode, setAuthMode] = useState<"login" | "register">('login');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+
+  // ---Check Login Boolean Value---
+  // const handlePress = () => {
+  //   console.log(isLoggedIn+' check');
+  // };
 
   // function onToggleAuthMode() {
   //   setAuthMode(authMode === 'login' ? 'register' : 'login');
   // }
+
 
   return (
     <KeyboardAvoidingView behavior="padding" style={globals.container}>
@@ -75,19 +76,27 @@ export default function Login() {
                 p={ 14 }
               />
             </VStack> */}
-            <Button onPress={handlePress}>
+            <Button
+              isLoading={isLoadingAuth}
+              onPress={onAuthenticate}
+              // onPress={handlePress}
+            >
               <TabBarIcon name="logo-google" size={19} style={styles.icon} />
               Sign in with Google
             </Button>
+
+            {/* <Button onPress={handlePress}>check login</Button> */}
             {/* <Button isLoading={ isLoadingAuth } onPress={ onAuthenticate }>{ authMode }</Button> */}
 
+            {/* <Divider w={"90%"} />
+            <VStack flex={1} justifyContent='center' alignItems='center' >
+              <Text fontSize={16} underline>
+                {authMode === 'login' ? 'Register new account' : 'Sign in with Google'}
+              </Text>
+            </VStack> */}
+            
           </VStack>
 
-          {/* <Divider w={ "90%" } />
-
-          <Text onPress={ onToggleAuthMode } fontSize={ 16 } underline>
-            { authMode === 'login' ? 'Register new account' : 'Login to account' }
-          </Text> */}
         </VStack>
       </ScrollView>
     </KeyboardAvoidingView >
