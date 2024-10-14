@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { Center } from 'native-base';
 import { ComponentProps } from 'react';
-import { Text } from 'react-native';
+import { Text, Platform } from 'react-native';
 
 export default function TabLayout() {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ export default function TabLayout() {
   const tabs = [
     {
       // showFor: [UserRole.Attendee, UserRole.Manager],
-      name: '(events)',
+      name: '(booking)',
       displayName: 'Book Now',
       icon: 'add-circle-sharp',
       options: {
@@ -22,7 +22,7 @@ export default function TabLayout() {
     },
     {
       // showFor: [UserRole.Attendee],
-      name: '(tickets)',
+      name: '(reservations)',
       displayName: 'My Reservations',
       icon: 'calendar',
       options: {
@@ -54,25 +54,34 @@ export default function TabLayout() {
       { tabs.map(tab => (
         <Tabs.Screen
           key={ tab.name }
-          name={ tab.name }
-          options={ {
+          name={tab.name}
+          options={{
             ...tab.options,
             headerTitle: tab.displayName,
             // href: tab.showFor.includes(user?.role!) ? tab.name : null,
             tabBarLabel: ({ focused }) => (
-              <Text style={ { color: focused ? "black" : "gray", fontSize: 12, padding: 20, alignContent: "center" } } >
-                { tab.displayName }
+              <Text
+                style={
+                  {
+                    color: focused ? "black" : "gray",
+                    fontSize: 12,
+                    alignContent: "center",
+                    padding: Platform.OS === 'web' ? 20 : 0
+                  }
+                } >
+                {tab.displayName}
               </Text>
+
             ),
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
-                name={ tab.icon as ComponentProps<typeof Ionicons>['name'] }
-                color={ focused ? 'black' : "gray" }
+                name={tab.icon as ComponentProps<typeof Ionicons>['name']}
+                color={focused ? 'black' : "gray"}
               />
             )
-          } }
+          }}
         />
-      )) }
+      ))}
     </Tabs>
   );
 }
