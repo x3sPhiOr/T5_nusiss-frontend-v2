@@ -50,11 +50,13 @@ export default function TicketScreen() {
 
   // test using ngrok (run command prompt in admin)
   // ngrok http http://localhost:5023
-  // ngrok http https://localhost:7248
 
    // Function to fetch reservations
    const fetchReservations = () => {
-    fetch('https://baf7-119-74-201-136.ngrok-free.app/Reservations')
+    // ngrok
+    // fetch('https://ff81-119-74-201-136.ngrok-free.app/Reservations')
+    // AWS
+    fetch('https://iam224l2sh.execute-api.ap-southeast-1.amazonaws.com/Reservations')
       .then(response => response.json()) // Parse the response as JSON
       .then(data => {
         console.log(data); 
@@ -80,6 +82,8 @@ export default function TicketScreen() {
   const isUpcoming = (reservationDate: string) => {
     const today = new Date();
     const reservationDateObj = new Date(reservationDate);
+    // reservationDateObj.setHours(0, 0, 0, 0);
+    // today.setHours(0, 0, 0, 0);
     // console.log("hello");
     // const test = reservationDateObj > today;
     // console.log(test);
@@ -118,8 +122,9 @@ export default function TicketScreen() {
 
   // Function to format the date to YYYY-MM-DD
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Returns date part in YYYY-MM-DD format
+    return dateString.split('T')[0];            // Returns date part in YYYY-MM-DD format
+    // const date = new Date(dateString);
+    // return date.toISOString().split('T')[0]; // Returns date part in YYYY-MM-DD format
   };
 
   return (

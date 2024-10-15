@@ -100,19 +100,24 @@ export default function NewEvent() {
         // await eventService.createOne(name, location, date.toISOString());
         // router.back();
         // POST API call
-        const response = await fetch("https://baf7-119-74-201-136.ngrok-free.app/Reservations/v2", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ReservationDate: date.toISOString(),
-            Timing: timing,
-            NumberOfTables: 1,
-            NumberOfSeats: parseInt(numberOfSeats),
-            CustomerID: 1
-          }),
-        });
+
+        // ngrok
+        // const response = await fetch("https://baf7-119-74-201-136.ngrok-free.app/Reservations/v2", 
+        // AWS
+        const response = await fetch("https://iam224l2sh.execute-api.ap-southeast-1.amazonaws.com/Reservations/v2",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ReservationDate: date.toISOString(),
+              Timing: timing,
+              NumberOfTables: 1,
+              NumberOfSeats: parseInt(numberOfSeats),
+              CustomerID: 1
+            }),
+          });
 
         // Handle response
         if (response.ok) {
