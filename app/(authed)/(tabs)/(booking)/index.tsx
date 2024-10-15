@@ -36,12 +36,13 @@ export default function NewEvent() {
   };
 
   const handleTimingChange = (value: string) => {
+    // console.log(1); // To check if the handler is firing
     setTiming(value);
     setErrors({ ...errors, timing: false });
   };
 
   const handleWebDateChange = (date: Date | null) => {
-    console.log(1);
+    console.log(1); // To check if the handler is firing
     if (date) {
       var today = new Date();
       var yesterday = today.getDate() - 1;
@@ -230,23 +231,22 @@ const handleFieldReset = () => {
       <VStack gap={5}>
         <Text ml={10} fontSize={14} color="gray">Date</Text>
         {Platform.OS === 'web' ? (
-            <DatePicker
-              // showIcon
-              selected={date}
-              onChange={handleWebDateChange}
-              // dateFormat="dd/MM/yyyy"
-              className="react-datepicker-wrapper"
-              customInput={<input style={customInputStyles} />}
-            // style={styles.input}
-            />
-          ) : (
+          <DatePicker
+            // showIcon
+            selected={date}
+            onChange={handleWebDateChange}
+            // dateFormat="dd/MM/yyyy"
+            className="react-datepicker-wrapper"
+            customInput={<input style={customInputStyles} />}
+          // style={styles.input}
+          />
+        ) : (
           <DateTimePicker onChange={onChangeDate} currentDate={date} />
         )}
         {/* {errors.date && <Text color="red">Please select a date.</Text>} */}
-      </VStack>
-
-      <VStack gap={20} flex={1} justifyContent='flex-start' alignItems='flex-end'>
+        <VStack justifyContent='flex-start' alignItems='flex-end'>
           <Button onPress={handleFieldReset}>Reset Fields</Button>
+        </VStack>
       </VStack>
 
       <Button
