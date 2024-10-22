@@ -63,6 +63,7 @@ export default function EventsScreen() {
 
       <HStack alignItems='center' justifyContent='space-between'>
         <Text fontSize={18} bold>{events.length} Events</Text>
+        <Text>123</Text>
       </HStack>
 
       <FlatList
